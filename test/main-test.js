@@ -5,30 +5,22 @@ describe('pos', () => {
   it('should print text', () => {
 
     const tags = [
-      'ITEM000001',
-      'ITEM000001',
-      'ITEM000001',
-      'ITEM000001',
-      'ITEM000001',
-      'ITEM000003-2.5',
-      'ITEM000005',
+      'ITEM000003-2',
       'ITEM000005-2',
     ];
 
-    spyOn(console, 'log');
 
-    printReceipt(tags);
+    const result = printReceipt(tags);
 
-    const expectText = `***<store earning no money>Receipt ***
-Name：Sprite，Quantity：5 bottles，Unit：3.00(yuan)，Subtotal：12.00(yuan)
-Name：Litchi，Quantity：2.5 pounds，Unit：15.00(yuan)，Subtotal：37.50(yuan)
-Name：Instant Noodles，Quantity：3 bags，Unit：4.50(yuan)，Subtotal：9.00(yuan)
-----------------------
-Total：58.50(yuan)
-Discounted prices：7.50(yuan)
-**********************`;
+    let formattedReceipt ='***<store earning no money>Receipt ***';
+    formattedReceipt += 'Name：Litchi，Quantity：2 pounds，Unit：15.00(yuan)，Subtotal：30.00(yuan)';
+    formattedReceipt += 'Name：Instant Noodles，Quantity：2 bags，Unit：4.50(yuan)，Subtotal：4.50(yuan)';
+    formattedReceipt += '----------------------';
+    formattedReceipt += 'Total：34.50(yuan)';
+    formattedReceipt += 'Discounted prices：4.50(yuan)';
+    formattedReceipt += '**********************';
 
-    expect(console.log).toHaveBeenCalledWith(expectText);
+    expect(result).toBe(formattedReceipt);
   });
 
 
@@ -49,7 +41,7 @@ Discounted prices：7.50(yuan)
       }
     ];
     const result = decodeBarcode(tags);
-    expect(result).toBe(actualResult);
+    expect(result).toEqual(actualResult);
   });
 
   it('should load items given valid barcodes', () =>{
@@ -79,7 +71,7 @@ Discounted prices：7.50(yuan)
     ];
 
     const result = loadItems(decodedBarcodes);
-    expect(result).toBe(itemsWithoutCount);
+    expect(result).toEqual(itemsWithoutCount);
   });
 
   it('should combine items given valid decoded barcodes', () =>{
@@ -111,7 +103,7 @@ Discounted prices：7.50(yuan)
       ];
 
       const result = combineItems(decodedBarcodes);
-      expect(result).toBe(items);
+      expect(result).toEqual(items);
     });
 
     it('should return items given valid tags', () =>{
@@ -138,7 +130,7 @@ Discounted prices：7.50(yuan)
       ];
 
       const result = decodeTags(tags);
-      expect(result).toBe(items);
+      expect(result).toEqual(items);
     });
 
     it('should load promotions', () =>{
@@ -153,7 +145,7 @@ Discounted prices：7.50(yuan)
         }
       ];
 
-      expect(loadPromotions()).toBe(actualResult);
+      expect(loadPromotions()).toEqual(actualResult);
     });
 
     it('should return receipt items given items and promotions', () =>{
@@ -204,7 +196,7 @@ Discounted prices：7.50(yuan)
         }
       ];
       const result = promoteReceiptItems(items, promotions);
-      expect(result).toBe(receiptItems);
+      expect(result).toEqual(receiptItems);
     });
 
     it('should return receipt items given items', () => {
@@ -244,7 +236,7 @@ Discounted prices：7.50(yuan)
         }
       ];
 
-      expect(calculateReceiptItems(items)).toBe(receiptItems);
+      expect(calculateReceiptItems(items)).toEqual(receiptItems);
     });
 
     it('should return total given receipt items', () =>{
@@ -316,30 +308,13 @@ Discounted prices：7.50(yuan)
       ];
 
       const receipt = {
-          receiptItems : [
-            {
-              barcode: 'ITEM000003',
-              name: 'Litchi',
-              unit: 'pound',
-              price: 15.00,
-              count:  2, 
-              subtotal: 30.00
-            },
-            {
-              barcode: 'ITEM000005',
-              name: 'Instant Noodles',
-              unit: 'bag',
-              price: 4.50,
-              count: 2,
-              subtotal: 4.50
-            }
-          ],
+          receiptItems : receiptItems,
           total : 34.50,
           saving : 4.50
       };
 
       const result = calculateReceipt(receiptItems);
-      expect(result).toBe(receipt);
+      expect(result).toEqual(receipt);
     });
 
     it('should return formatted receipt given receipt', () =>{
@@ -373,11 +348,11 @@ Discounted prices：7.50(yuan)
     formattedReceipt += 'Total：34.50(yuan)';
     formattedReceipt += 'Discounted prices：4.50(yuan)';
     formattedReceipt += '**********************';
-    });
-
+  
     const result = renderReceipt(receipt);
 
     expect(result).toBe(formattedReceipt);
+    });
   });
 
 
